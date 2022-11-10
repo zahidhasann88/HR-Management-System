@@ -1,0 +1,16 @@
+CREATE TABLE public.employee (
+	employeeid int4 NOT NULL,
+	employename varchar(255) NULL,
+	age int4 NULL,
+	department varchar(255) NULL,
+	dependentid int4 NULL,
+	dependentname varchar(255) NULL,
+	"position" varchar(255) NULL,
+	joindate date NULL,
+	salary varchar(255) NULL,
+	created_date date NULL,
+	created_by varchar(255) NULL,
+	updated_date date NULL,
+	updated_by varchar(255) NULL,
+	CONSTRAINT employee_pkey PRIMARY KEY (employeeid)
+);

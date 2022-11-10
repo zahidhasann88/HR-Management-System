@@ -1,0 +1,5 @@
+"employeeid","employename","age","department","dependentid","dependentname","position","joindate","salary","created_date","created_by","updated_date","updated_by"
+1,Rain Hossen,33,Software Development,3,Glen Philips,Sofware Engineer,2016-01-13,"2000",,,,
+2,Alex,24,Software Development,5,Wiliam,Traine Software Engineer,2022-07-01,"1500",,,,
+3,Jimmy,18,Accounts,2,Wiliamson,Accounts Officer,2014-01-01,"2500",,,,
+4,Andre,40,Sales,1,Ross,Haed of Marketing,2010-08-01,"4000",,,,
