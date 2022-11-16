@@ -1,3 +1,5 @@
+using HR_Management_System.Interfaces;
+using HR_Management_System.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +32,8 @@ namespace HR_Management_System
             services.AddDbContext<Models.PostgresContext>(options =>
                 options.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=15Nov1998")
             );
+
+            services.AddScoped<IEmployeService, EmployeeRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

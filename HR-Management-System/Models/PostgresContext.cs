@@ -33,51 +33,53 @@ namespace HR_Management_System.Models
         {
             modelBuilder.HasPostgresExtension("adminpack")
                 .HasAnnotation("Relational:Collation", "English_United States.1252");
+            
+            //u dont need to write fluent api , write data annotation, if something data annonation
+            // does not have, use fluent api then
+            //modelBuilder.Entity<Employee>(entity =>
+            //{
+            //    //entity.HasNoKey();
 
-            modelBuilder.Entity<Employee>(entity =>
-            {
-                //entity.HasNoKey();
+            //    entity.HasKey(e => e.Employeeid);
 
-                entity.HasKey(e => e.Employeeid);
+            //    entity.ToTable("employee");
 
-                entity.ToTable("employee");
+            //    entity.Property(e => e.Employeeid).ValueGeneratedOnAdd().HasColumnType("int4").HasColumnName("employeeid");
 
-                entity.Property(e => e.Employeeid).ValueGeneratedOnAdd().HasColumnType("int4").HasColumnName("employeeid");
+            //    entity.Property(e => e.EmployeName)
+            //        .HasColumnType("character varying")
+            //        .HasColumnName("employename");
 
-                entity.Property(e => e.EmployeName)
-                    .HasColumnType("character varying")
-                    .HasColumnName("employename");
-
-                entity.Property(e => e.Age)
-                      .HasColumnType("int4")
-                      .HasColumnName("age");
+            //    entity.Property(e => e.Age)
+            //          .HasColumnType("int4")
+            //          .HasColumnName("age");
 
 
-                entity.Property(e => e.Department)
-                      .HasColumnType("character varying")
-                      .HasColumnName("department");
+            //    entity.Property(e => e.Department)
+            //          .HasColumnType("character varying")
+            //          .HasColumnName("department");
 
-                entity.Property(e => e.Dependentid)
-                      .HasColumnType("int4")
-                      .HasColumnName("dependentid");
+            //    entity.Property(e => e.Dependentid)
+            //          .HasColumnType("int4")
+            //          .HasColumnName("dependentid");
 
-                entity.Property(e => e.DependentName)
-                      .HasColumnType("character varying")
-                      .HasColumnName("dependentname");
+            //    entity.Property(e => e.DependentName)
+            //          .HasColumnType("character varying")
+            //          .HasColumnName("dependentname");
 
-                entity.Property(e => e.Position)
-                      .HasColumnType("character varying")
-                      .HasColumnName("position");
+            //    entity.Property(e => e.Position)
+            //          .HasColumnType("character varying")
+            //          .HasColumnName("position");
 
-                entity.Property(e => e.Joindate)
-                      .HasColumnType("date")
-                      .HasColumnName("joindate");
+            //    entity.Property(e => e.Joindate)
+            //          .HasColumnType("date")
+            //          .HasColumnName("joindate");
 
-                entity.Property(e => e.Salary)
-                      .HasColumnType("character varying")
-                      .HasColumnName("salary");
+            //    entity.Property(e => e.Salary)
+            //          .HasColumnType("character varying")
+            //          .HasColumnName("salary");
 
-            });
+            //});
 
             OnModelCreatingPartial(modelBuilder);
         }

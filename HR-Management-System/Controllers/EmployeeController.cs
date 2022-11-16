@@ -1,4 +1,5 @@
 ﻿using HR_Management_System.DTOs;
+using HR_Management_System.Interfaces;
 using HR_Management_System.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,226 +29,45 @@ namespace HR_Management_System.Controllers
     public class EmployeeController : Controller
     {
         private readonly Models.PostgresContext _context;
+        private readonly IEmployeService _employeService;
 
-        public EmployeeController(Models.PostgresContext context)
+        public EmployeeController(Models.PostgresContext context, IEmployeService employeService)
         {
             _context = context;
+            _employeService = employeService;
         }
         [HttpGet]
         public async Task<ActionResult<ResponseDto>> GetEmployees()
         {
-            List<Employee> employees = await _context.Employees.ToListAsync();
-
-
-            if (employees.Count > 0)
-            {
-                return StatusCode(StatusCodes.Status200OK, new ResponseDto
-                {
-                    Message = "Employee List",
-                    Success = true,
-                    Payload = employees
-                });
-            }
-
-            return StatusCode(StatusCodes.Status404NotFound, new ResponseDto
-            {
-                Message = "No Employee",
-                Success = false,
-                Payload = null
-            });
-
+            var em = await _employeService.GetEmployes();
+            return StatusCode(em.StatusCode, em);
         }
 
-        [HttpPost("GetEmployeeById")]
-        public async Task<ActionResult<ResponseDto>> GetEmployees([FromBody] MyClass1 input)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Employee>> GetEmploye(int id)
         {
-            if (input.Employeeid == null)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDto
-                {
-                    Message = "id error",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            var employee = await _context.Employees.Where(VALK => VALK.Employeeid == input.Employeeid).FirstOrDefaultAsync();
-
-            if (employee == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, new ResponseDto
-                {
-                    Message = "No Employee",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            return StatusCode(StatusCodes.Status200OK, new ResponseDto
-            {
-                Message = " employee info",
-                Success = true,
-                Payload = employee
-            });
+            var r = await _employeService.GetEmploye(id);
+            return StatusCode(r.StatusCode, r);
         }
 
-        [HttpPut("UpdateEmployee")]
-        public async Task<ActionResult<ResponseDto>> PutEmployee([FromBody] Employee input)
+        [HttpPost]
+        public async Task<ActionResult<Employee>> PostEmploye(Employee employee)
         {
-            if (input.Employeeid == null)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDto
-                {
-                    Message = " id is null",
-                    Success = false,
-                    Payload = null
-                });
-            }
-            if (input.EmployeName == null)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDto
-                {
-                    Message = " Name is null",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            //old 
-            Employee employee = await _context.Employees.Where(i => i.Employeeid == input.Employeeid).FirstOrDefaultAsync();
-            if (employee == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, new ResponseDto
-                {
-                    Message = "this employee not listed your db",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            //new
-            employee.EmployeName = input.EmployeName;
-            employee.DependentName = input.DependentName;
-            employee.Age = input.Age;
-            employee.Dependentid = input.Dependentid;
-            employee.DependentName = input.DependentName;
-            employee.Position = input.Position;
-            employee.Joindate = input.Joindate;
-            employee.Salary = input.Salary;
-            _context.Employees.Update(employee);
-            bool isSaved = await _context.SaveChangesAsync() > 0;
-
-            if (isSaved == false)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
-                {
-                    Message = "updating Unsuccesfull",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            return StatusCode(StatusCodes.Status200OK, new ResponseDto
-            {
-                Message = "updating complete",
-                Success = true,
-                Payload = null
-            });
+            var r = await _employeService.PostEmploye(employee);
+            return StatusCode(r.StatusCode, r);
         }
-        [HttpPost("CreateEmployee")]
-        public async Task<ActionResult<ResponseDto>> PostEmployee([FromBody] Employee input)
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutEmploye(int id, Employee employee)
         {
-            if (input.EmployeName == null)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDto
-                {
-                    Message = " name is null",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            //old
-            Employee country = await _context.Employees.Where(i => i.Employeeid == input.Employeeid).FirstOrDefaultAsync();
-            if (country != null)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, new ResponseDto
-                {
-                    Message = "already exist",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-
-            _context.Employees.Add(input);
-            bool isSaved = await _context.SaveChangesAsync() > 0;
-
-            if (isSaved == false)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
-                {
-                    Message = "creating error",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            return StatusCode(StatusCodes.Status200OK, new ResponseDto
-            {
-                Message = "creating done",
-                Success = true,
-                Payload = new { input.Employeeid } // optional, can be null too like update
-            });
+            var r = await _employeService.PutEmploye(id, employee);
+            return StatusCode(r.StatusCode, r);
         }
-        // DELETE: api/Countries/5
-        [HttpDelete("DeleteEmployee")]
-        public async Task<ActionResult<ResponseDto>> DeleteEmployee([FromBody] MyClass1 input)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmploye(int id)
         {
-            if (input.Employeeid == null)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, new ResponseDto
-                {
-                    Message = " id is null",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            Employee employee = await _context.Employees.Where(i => i.Employeeid == input.Employeeid).FirstOrDefaultAsync();
-            if (employee == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, new ResponseDto
-                {
-                    Message = "not exist your db",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            _context.Employees.Remove(employee);
-            bool isSaved = await _context.SaveChangesAsync() > 0;
-
-            if (isSaved == false)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
-                {
-                    Message = "deleting error",
-                    Success = false,
-                    Payload = null
-                });
-            }
-
-            return StatusCode(StatusCodes.Status200OK, new ResponseDto
-            {
-                Message = "deleted",
-                Success = true,
-                Payload = new { input.Employeeid } // optional, can be null too like update
-            });
-        }
-        private bool EmployeeExists(int? id)
-        {
-            return _context.Employees.Any(e => e.Employeeid == id);
+            var r = await _employeService.DeleteEmploye(id);
+            return StatusCode(r.StatusCode, r);
         }
     }
 }
