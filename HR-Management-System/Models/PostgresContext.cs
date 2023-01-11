@@ -17,15 +17,16 @@ namespace HR_Management_System.Models
         {
         }
 
-        public virtual DbSet<Employee> Employees { get; set; }
-        public object Employee { get; internal set; }
+        public  DbSet<Employee> Employees { get; set; }
+        //public  DbSet<Department> Departments { get; set; }
+        public  DbSet<Salary> Salaries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=15Nov1998");
+                optionsBuilder.UseNpgsql("Host=localhost;Database=hr_ms;Username=postgres;Password=15Nov1998");
             }
         }
 

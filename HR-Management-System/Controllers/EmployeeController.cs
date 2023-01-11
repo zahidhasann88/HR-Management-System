@@ -12,28 +12,14 @@ using System.Threading.Tasks;
 namespace HR_Management_System.Controllers
 
 {
-    public class MyClass1
-    {
-        public int? Employeeid { get; set; }
-        //public int? Id { get; set; }
-    }
-
-    public class MyClass2
-    {
-        public int? Employeeid { get; set; }
-        public string EmployeName { get; set; }
-    }
-
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : Controller
     {
-        private readonly Models.PostgresContext _context;
         private readonly IEmployeService _employeService;
 
-        public EmployeeController(Models.PostgresContext context, IEmployeService employeService)
+        public EmployeeController(IEmployeService employeService)
         {
-            _context = context;
             _employeService = employeService;
         }
         [HttpGet]
@@ -50,7 +36,7 @@ namespace HR_Management_System.Controllers
             return StatusCode(r.StatusCode, r);
         }
 
-        [HttpPost]
+        [HttpPost("create-employee")]
         public async Task<ActionResult<Employee>> PostEmploye(Employee employee)
         {
             var r = await _employeService.PostEmploye(employee);
@@ -69,5 +55,31 @@ namespace HR_Management_System.Controllers
             var r = await _employeService.DeleteEmploye(id);
             return StatusCode(r.StatusCode, r);
         }
+        [HttpGet("Salary")]
+        public async Task<ActionResult<ResponseDto>> GetSalary()
+        {
+            var sa = await _employeService.GetSalary();
+            return StatusCode(sa.StatusCode, sa);
+        }
+        //[HttpPost("lol2")]
+        //public async Task<IActionResult> Lol2([FromBody] FuckDto input)
+        //{
+        //    // method - 1
+        //    //using var transaction = _context.Database.BeginTransaction();
+        //    //try
+        //    //{
+        //    //    _context.Employees.Add(input.Fuck1);
+        //    //    await _context.SaveChangesAsync();
+        //    //    _context.Salaries.Add(input.Fuck2);
+        //    //    await _context.SaveChangesAsync();
+        //    //    transaction.Commit();
+        //    //    return Ok();
+        //    //}
+        //    //catch (Exception)
+        //    //{
+        //    //    transaction.Rollback();
+        //    //    return BadRequest();
+        //    //}
+        //}
     }
 }

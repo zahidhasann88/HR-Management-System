@@ -12,24 +12,18 @@ namespace HR_Management_System.Models
     public partial class Employee
     {
         [Key]
-        [Column("employeeid")]
-        public int Employeeid { get; set; }
-        [Column("employename")]
-        public string EmployeName { get; set; }
-        [Column("age")]
-        public int Age { get; set; }
-        [Column("department")]
-        public string Department { get; set; }
-        [Column("dependentid")]
-        public int Dependentid { get; set; }
-        [Column("dependentname")]
-        public string DependentName { get; set; }
-        [Column("position")]
-        public string Position { get; set; }
+        [Column("emp_id")]
+        public int Id { get; set; }
+        [Column("name")]
+        public string Name { get; set; }
+        [Column("email")]
+        public string Email { get; set; }
+        [Column("mobile")]
+        public string Mobile { get; set; }
+        [Column("designation")]
+        public string Designation { get; set; }
         [Column("joindate")]
         public DateTime Joindate { get; set; }
-        [Column("salary")]
-        public string Salary { get; set; }
-        
+        public virtual Salary Salary { get; set; }
     }
 }

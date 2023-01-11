@@ -11,5 +11,7 @@ namespace HR_Management_System.Interfaces
         public Task<ResponseDto> PutEmploye(int id, Employee employee);
         public Task<ResponseDto> PostEmploye(Employee employee);
         public Task<ResponseDto> DeleteEmploye(int id);
+        public Task<ResponseDto> GetSalary();
+
     }
 }

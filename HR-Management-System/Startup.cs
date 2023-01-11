@@ -30,7 +30,7 @@ namespace HR_Management_System
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Models.PostgresContext>(options =>
-                options.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=15Nov1998")
+                options.UseNpgsql("Host=localhost;Database=hr_ms;Username=postgres;Password=15Nov1998")
             );
 
             services.AddScoped<IEmployeService, EmployeeRepository>();
