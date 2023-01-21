@@ -1,6 +1,7 @@
 ﻿using HR_Management_System.DTOs;
 using HR_Management_System.Interfaces;
 using HR_Management_System.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace HR_Management_System.Controllers
 
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : Controller
@@ -23,10 +25,11 @@ namespace HR_Management_System.Controllers
             _employeService = employeService;
         }
         [HttpGet]
-        public async Task<ActionResult<ResponseDto>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
-            var em = await _employeService.GetEmployes();
-            return StatusCode(em.StatusCode, em);
+            //var em = await _employeService.GetEmployes();
+            //return StatusCode(em.StatusCode, em);
+            return await Task.FromResult(_employeService.GetEmployes());
         }
 
         [HttpGet("{id}")]

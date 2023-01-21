@@ -23,21 +23,30 @@ namespace HR_Management_System.Repositories
             _context = context;
         }
 
-        public async Task<ResponseDto> GetEmployes()
+        public List<Employee> GetEmployes()
         {
-            var employees = await _context.Employees.OrderBy(e => e.Id).ToListAsync();
-            if (employees == null || employees.Count == 0)
-            {
-                _responseDto.Message = "No employees info found";
-                _responseDto.Success = false;
-                _responseDto.Payload = null;
-                return _responseDto;
+            //var employees = await _context.Employees.OrderBy(e => e.Id).ToListAsync();
+            //if (employees == null || employees.Count == 0)
+            //{
+            //    _responseDto.Message = "No employees info found";
+            //    _responseDto.Success = false;
+            //    _responseDto.Payload = null;
+            //    return _responseDto;
 
+            //}
+            //_responseDto.Message = "List of employees";
+            //_responseDto.Success = true;
+            //_responseDto.Payload = employees;
+            //return _responseDto;
+
+            try
+            {
+                return _context.Employees.ToList();
             }
-            _responseDto.Message = "List of employees";
-            _responseDto.Success = true;
-            _responseDto.Payload = employees;
-            return _responseDto;
+            catch
+            {
+                throw;
+            }
         }
 
 

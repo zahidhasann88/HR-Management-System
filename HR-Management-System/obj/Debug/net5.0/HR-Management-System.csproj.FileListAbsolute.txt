@@ -34,3 +34,11 @@ F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\obj\
 F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\obj\Debug\net5.0\ref\HR-Management-System.dll
 F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\obj\Debug\net5.0\HR-Management-System.pdb
 F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\obj\Debug\net5.0\HR-Management-System.genruntimeconfig.cache
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\Microsoft.IdentityModel.Abstractions.dll
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+F:\Work\Personal Portfolio\Dotnet\HR-Management-System\HR-Management-System\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
