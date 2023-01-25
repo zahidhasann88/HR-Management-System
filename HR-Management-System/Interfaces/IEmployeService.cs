@@ -7,12 +7,12 @@ namespace HR_Management_System.Interfaces
 {
     public interface IEmployeService
     {
-        public List<Employee> GetEmployes();
-        public Task<ResponseDto> GetEmploye(int id);
-        public Task<ResponseDto> PutEmploye(int id, Employee employee);
-        public Task<ResponseDto> PostEmploye(Employee employee);
-        public Task<ResponseDto> DeleteEmploye(int id);
-        public Task<ResponseDto> GetSalary();
+        public Task<List<Employee>> GetEmployeesAsync();
+        public Task<ResponseDto> GetEmployeeByIdAsync(int id);
+        public Task<ResponseDto> PutEmployeeAsync(int id, Employee employee);
+        public Task<ResponseDto> PostEmployeeAsync(Employee employee);
+        public Task<ResponseDto> DeleteEmployeeAsync(int id);
+        public Task<ResponseDto> GetSalaryAsync(int skip, int take);
 
     }
 }

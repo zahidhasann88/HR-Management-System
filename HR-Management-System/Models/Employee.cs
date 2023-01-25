@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,6 +11,7 @@ namespace HR_Management_System.Models
         [Column("emp_id")]
         public int Id { get; set; }
         [Column("name")]
+        [MaxLength(150)]
         public string Name { get; set; }
         [Column("email")]
         public string Email { get; set; }

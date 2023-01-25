@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
@@ -17,8 +15,8 @@ namespace HR_Management_System.Models
         {
         }
 
-        public  DbSet<Employee> Employees { get; set; }
-        public  DbSet<Salary> Salaries { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Salary> Salaries { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -34,7 +32,7 @@ namespace HR_Management_System.Models
         {
             modelBuilder.HasPostgresExtension("adminpack")
                 .HasAnnotation("Relational:Collation", "English_United States.1252");
-            
+
             //u dont need to write fluent api , write data annotation, if something data annonation
             // does not have, use fluent api then
             //modelBuilder.Entity<Employee>(entity =>

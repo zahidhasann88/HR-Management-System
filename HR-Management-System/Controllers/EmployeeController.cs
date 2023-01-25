@@ -2,12 +2,8 @@
 using HR_Management_System.Interfaces;
 using HR_Management_System.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HR_Management_System.Controllers
@@ -25,64 +21,48 @@ namespace HR_Management_System.Controllers
             _employeService = employeService;
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
-            //var em = await _employeService.GetEmployes();
-            //return StatusCode(em.StatusCode, em);
-            return await Task.FromResult(_employeService.GetEmployes());
+            return await _employeService.GetEmployeesAsync();
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Employee>> GetEmploye(int id)
         {
-            var r = await _employeService.GetEmploye(id);
+            var r = await _employeService.GetEmployeeByIdAsync(id);
             return StatusCode(r.StatusCode, r);
         }
 
         [HttpPost("create-employee")]
+        [AllowAnonymous]
         public async Task<ActionResult<Employee>> PostEmploye(Employee employee)
         {
-            var r = await _employeService.PostEmploye(employee);
+            var r = await _employeService.PostEmployeeAsync(employee);
             return StatusCode(r.StatusCode, r);
         }
 
         [HttpPut("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> PutEmploye(int id, Employee employee)
         {
-            var r = await _employeService.PutEmploye(id, employee);
+            var r = await _employeService.PutEmployeeAsync(id, employee);
             return StatusCode(r.StatusCode, r);
         }
         [HttpDelete("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteEmploye(int id)
         {
-            var r = await _employeService.DeleteEmploye(id);
+            var r = await _employeService.DeleteEmployeeAsync(id);
             return StatusCode(r.StatusCode, r);
         }
         [HttpGet("Salary")]
-        public async Task<ActionResult<ResponseDto>> GetSalary()
+        [AllowAnonymous]
+        public async Task<ActionResult<ResponseDto>> GetSalary([FromBody] LolDto lolDto)
         {
-            var sa = await _employeService.GetSalary();
+            var sa = await _employeService.GetSalaryAsync(lolDto.Skip, lolDto.Take);
             return StatusCode(sa.StatusCode, sa);
         }
-        //[HttpPost("lol2")]
-        //public async Task<IActionResult> Lol2([FromBody] FuckDto input)
-        //{
-        //    // method - 1
-        //    //using var transaction = _context.Database.BeginTransaction();
-        //    //try
-        //    //{
-        //    //    _context.Employees.Add(input.Fuck1);
-        //    //    await _context.SaveChangesAsync();
-        //    //    _context.Salaries.Add(input.Fuck2);
-        //    //    await _context.SaveChangesAsync();
-        //    //    transaction.Commit();
-        //    //    return Ok();
-        //    //}
-        //    //catch (Exception)
-        //    //{
-        //    //    transaction.Rollback();
-        //    //    return BadRequest();
-        //    //}
-        //}
     }
 }

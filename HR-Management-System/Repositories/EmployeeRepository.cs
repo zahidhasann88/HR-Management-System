@@ -2,7 +2,6 @@
 using HR_Management_System.Interfaces;
 using HR_Management_System.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,49 +22,37 @@ namespace HR_Management_System.Repositories
             _context = context;
         }
 
-        public List<Employee> GetEmployes()
+        public async Task<List<Employee>> GetEmployeesAsync()
         {
-            //var employees = await _context.Employees.OrderBy(e => e.Id).ToListAsync();
-            //if (employees == null || employees.Count == 0)
-            //{
-            //    _responseDto.Message = "No employees info found";
-            //    _responseDto.Success = false;
-            //    _responseDto.Payload = null;
-            //    return _responseDto;
-
-            //}
-            //_responseDto.Message = "List of employees";
-            //_responseDto.Success = true;
-            //_responseDto.Payload = employees;
-            //return _responseDto;
-
             try
             {
-                return _context.Employees.ToList();
+                return await _context.Employees.Include(i => i.Salary).ToListAsync();
             }
-            catch
+            catch (Exception)
             {
-                throw;
+                return null;
             }
         }
 
 
-        public async Task<ResponseDto> GetEmploye(int id)
+        public async Task<ResponseDto> GetEmployeeByIdAsync(int id)
         {
             if (_context.Employees == null)
             {
                 _responseDto.StatusCode = StatusCodes.Status404NotFound;
                 return _responseDto;
             }
-            var employe = await _context.Employees.FindAsync(id);
+            var employe = await _context.Employees.Where(i => i.Id == id).FirstOrDefaultAsync();
 
             if (employe == null)
             {
                 _responseDto.StatusCode = StatusCodes.Status404NotFound;
+                _responseDto.Success = false;
                 return _responseDto;
             }
 
             _responseDto.StatusCode = StatusCodes.Status200OK;
+            _responseDto.Success = true;
             _responseDto.Payload = employe;
             return _responseDto;
         }
@@ -85,68 +72,119 @@ namespace HR_Management_System.Repositories
         //    return _responseDto;
         //}
 
-        public async Task<ResponseDto> PutEmploye(int id, Employee employee)
+        public async Task<ResponseDto> PutEmployeeAsync(int id, Employee employee)
         {
-            if (id != employee.Id)
-            {
-                _responseDto.StatusCode = StatusCodes.Status400BadRequest;
-                return _responseDto;
-            }
-
-            _context.Entry(employee).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmployeExists(id))
+                if (id != employee.Id)
                 {
+                    _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                    _responseDto.Success = false;
+                    return _responseDto;
+                }
+
+                Employee e = await _context.Employees.Where(i => i.Id == id).FirstOrDefaultAsync();
+                if (e == null)
+                {
+                    _responseDto.Message = "No Employee found with id: " + id;
+                    _responseDto.Success = false;
                     _responseDto.StatusCode = StatusCodes.Status404NotFound;
+                }
+                // if we want to update one/some property use this syntax
+                //e.Name = employee.Name;
+                //_context.Entry(e).Property(o => o.Name).IsModified = true;
+                //int isSaved = await _context.SaveChangesAsync();
+
+                // if we want to update all property
+                e.Name = employee.Name;
+                e.Designation = e.Designation;
+                // put all column like that
+                _context.Employees.Update(e);
+                int isSaved = await _context.SaveChangesAsync();
+                if (isSaved > 0)
+                {
+                    _responseDto.StatusCode = StatusCodes.Status200OK;
+                    _responseDto.Message = "Update Successful.";
+                    _responseDto.Success = true;
                     return _responseDto;
                 }
                 else
                 {
-                    throw;
+                    _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                    _responseDto.Message = "Update failed.";
+                    _responseDto.Success = false;
+                    return _responseDto;
                 }
             }
-
-            _responseDto.StatusCode = StatusCodes.Status204NoContent;
-            return _responseDto;
-        }
-
-        public async Task<ResponseDto> DeleteEmploye(int id)
-        {
-            if (_context.Employees == null)
+            catch (Exception ex)
             {
-                _responseDto.StatusCode = StatusCodes.Status404NotFound;
+                _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                _responseDto.Message = "Update failed. Something went wrong.";
+                _responseDto.Success = false;
+                _responseDto.Payload = ex;
                 return _responseDto;
             }
-            var employe = await _context.Employees.FindAsync(id);
-            if (employe == null)
-            {
-                _responseDto.StatusCode = StatusCodes.Status404NotFound;
-                return _responseDto;
-            }
-
-            _context.Employees.Remove(employe);
-            await _context.SaveChangesAsync();
-
-            _responseDto.StatusCode = StatusCodes.Status204NoContent;
-            return _responseDto;
         }
 
-        public async Task<ResponseDto> GetSalary()
+        public async Task<ResponseDto> DeleteEmployeeAsync(int id)
         {
-            var salarys = await _context.Employees.Include(i => i.Salary).ToListAsync();
+            try
+            {
+                if (id == 0)
+                {
+                    _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                    _responseDto.Success = false;
+                    return _responseDto;
+                }
+
+                Employee e = await _context.Employees.Where(i => i.Id == id).FirstOrDefaultAsync();
+                if (e == null)
+                {
+                    _responseDto.Message = "No Employee found with id: " + id;
+                    _responseDto.Success = false;
+                    _responseDto.StatusCode = StatusCodes.Status404NotFound;
+                }
+
+                _context.Employees.Remove(e);
+                int isSaved = await _context.SaveChangesAsync();
+                if (isSaved > 0)
+                {
+                    _responseDto.StatusCode = StatusCodes.Status200OK;
+                    _responseDto.Message = "Delete Successful.";
+                    _responseDto.Success = true;
+                    return _responseDto;
+                }
+                else
+                {
+                    _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                    _responseDto.Message = "Delete failed.";
+                    _responseDto.Success = false;
+                    return _responseDto;
+                }
+            }
+            catch (Exception ex)
+            {
+                _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                _responseDto.Message = "Delete failed. Something went wrong.";
+                _responseDto.Success = false;
+                _responseDto.Payload = ex;
+                return _responseDto;
+            }
+        }
+
+        // pagination (skip - take) // explanation
+        // 0 - 5 // means: 1 2 3 4 5
+        // 5 - 5 // means: 6 7 8 9 10
+        // 10 - 5 // means: 11 12 13 14 15
+        public async Task<ResponseDto> GetSalaryAsync(int skip, int take)
+        {
+            var salarys = await _context.Salaries.Skip(skip).Take(take).ToListAsync();
             if (salarys == null || salarys.Count == 0)
             {
                 _responseDto.Message = "No salarys info found";
                 _responseDto.Success = false;
                 _responseDto.Payload = null;
                 return _responseDto;
-
             }
             _responseDto.Message = "List of salarys";
             _responseDto.Success = true;
@@ -154,33 +192,53 @@ namespace HR_Management_System.Repositories
             return _responseDto;
         }
 
-        public async Task<ResponseDto> PostEmploye(Employee employee)
+        public async Task<ResponseDto> PostEmployeeAsync(Employee employee)
         {
-            using var transaction = _context.Database.BeginTransaction();
             try
             {
-                _context.Employees.Add(employee);
-                await _context.SaveChangesAsync();
-                transaction.Commit();
-                _responseDto.Message = "Saved Successfull employee";
-                _responseDto.Success = true;
-                _responseDto.StatusCode = StatusCodes.Status200OK;
-                return _responseDto;
+                using var transaction = _context.Database.BeginTransaction();
+                {
+                    Employee e = await _context.Employees.Where(i => i.Id == employee.Id).FirstOrDefaultAsync();
+                    if (e != null)
+                    {
+                        _responseDto.Message = "Employee already exists with id: " + employee.Id;
+                        _responseDto.Success = false;
+                        _responseDto.StatusCode = StatusCodes.Status409Conflict;
+                        transaction.Rollback();
+                        return _responseDto;
+                    }
+
+                    _context.Employees.Add(e);
+                    int isSaved = await _context.SaveChangesAsync();
+                    if (isSaved > 0)
+                    {
+                        _responseDto.StatusCode = StatusCodes.Status200OK;
+                        _responseDto.Message = "Create Successful.";
+                        _responseDto.Success = true;
+                        transaction.Commit();
+                        return _responseDto;
+                    }
+                    else
+                    {
+                        _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                        _responseDto.Message = "Create failed.";
+                        _responseDto.Success = false;
+                        transaction.Rollback();
+                        return _responseDto;
+                    }
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                transaction.Rollback();
-                _responseDto.Message = "Save Failed employee";
-                _responseDto.Success = false;
                 _responseDto.StatusCode = StatusCodes.Status400BadRequest;
+                _responseDto.Message = "Create failed. Something went wrong.";
+                _responseDto.Success = false;
+                _responseDto.Payload = ex;
                 return _responseDto;
             }
         }
-        private bool EmployeExists(int id)
-        {
-            return (_context.Employees?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-
-
     }
 }
+
+// do not use findasync
+// only use tolistasync or firstordefaultasync
